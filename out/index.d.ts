@@ -145,8 +145,22 @@ export interface Icon {
 	/**
 	 * Changes the icon's appearance.
 	 * See [themes](https://1foreverhd.github.io/TopbarPlus/features/#modify-theme).
+	 *
+	 * Returns two values, the icon and an id for the change, which
+	 * `removeModification` takes. Chain through `[0]`, or destructure. (Typed as
+	 * just the icon, a call at the end of an array or a return would let the id
+	 * into the array.) Pass `modificationId` to choose the id. Don't pass an
+	 * empty array: TopbarPlus records it as a broken change.
 	 */
-	modifyTheme(modifications: IconModifications): this;
+	modifyTheme(
+		modifications: IconModifications,
+		modificationId?: string,
+	): LuaTuple<[icon: this, modificationId: string]>;
+	/**
+	 * Undoes a `modifyTheme` change, by the id it returned. A property the base
+	 * theme doesn't set keeps its changed value.
+	 */
+	removeModification(modificationId: string): this;
 	/** Changes the appearance of the icons in this icon's menu or dropdown. */
 	modifyChildTheme(modifications: IconModifications): this;
 	/** When false the icon is hidden and disabled. */
@@ -227,14 +241,21 @@ export interface Icon {
 	/** Shows a key in the caption without binding it. */
 	setCaptionHint(key: Enum.KeyCode): this;
 	/**
-	 * Gives the icon a vertical dropdown of these icons. An empty array removes it.
+	 * Gives the icon a vertical dropdown of these icons.
 	 * See [dropdowns](https://1foreverhd.github.io/TopbarPlus/features/#dropdowns).
+	 *
+	 * Calling it again is meant to destroy the icons from the last call, but
+	 * TopbarPlus skips some of them, so destroy those yourself. An icon hides
+	 * itself once its last dropdown or menu icon leaves.
 	 */
 	setDropdown(icons: ReadonlyArray<Icon>): this;
 	joinDropdown(parentIcon: Icon): this;
 	/**
-	 * Gives the icon a horizontal menu of these icons. An empty array removes it.
+	 * Gives the icon a horizontal menu of these icons.
 	 * See [menus](https://1foreverhd.github.io/TopbarPlus/features/#menus).
+	 *
+	 * Calling it again has the same problem as `setDropdown`: some of the old
+	 * icons survive.
 	 */
 	setMenu(icons: ReadonlyArray<Icon>): this;
 	/**
@@ -266,7 +287,12 @@ interface IconConstructor {
 	getIcon: (nameOrUID: string) => Icon | undefined;
 	/** False hides every TopbarPlus ScreenGui. Roblox's own topbar is unaffected. */
 	setTopbarEnabled: (enabled: boolean) => void;
-	/** Changes the appearance of every icon. */
+	/**
+	 * Changes the base theme every icon is drawn from. It only changes a name and
+	 * property that TopbarPlus's default theme already sets; any other
+	 * modification is silently ignored. A state given here applies to every
+	 * state when the default sets that property for all states.
+	 */
 	modifyBaseTheme: (modifications: IconModifications) => void;
 	/** Sets the base DisplayOrder of TopbarPlus's ScreenGuis. */
 	setDisplayOrder: (order: number) => void;

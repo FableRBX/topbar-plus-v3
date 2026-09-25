@@ -47,6 +47,16 @@ let greeting: string | undefined;
 const methods = examples.methods(shop, (text) => (greeting = text));
 const [destroyed, janitored] = examples.destroying();
 
+// modifyTheme last in an array: the id must stay out of it. And its id undoes
+// the change, back to the base theme's TextSize.
+const listParent = new Icon().setLabel("List parent");
+const listed = [new Icon().setLabel("A"), new Icon().setLabel("B").modifyTheme(["IconLabel", "TextSize", 30])[0]];
+listParent.setDropdown(listed);
+const [sized, sizeChange] = new Icon().setLabel("Sized").modifyTheme(["IconLabel", "TextSize", 30]);
+const sizedLabel = sized.getInstance("IconLabel");
+const sizeWhileModified = sizedLabel?.TextSize;
+sized.removeModification(sizeChange);
+
 let toggles = 0;
 toggler.toggled.Connect(() => (toggles += 1));
 toggler.select();
@@ -84,6 +94,9 @@ check("setCornerRadius takes a UDim", corner?.CornerRadius === new UDim(0, 8));
 check("Dropdown MaxIcons lands as an attribute", dropdown.getInstance("Dropdown")?.GetAttribute("MaxIcons") === 3);
 check("Menu MaxIcons lands as an attribute", menu.getInstance("Menu")?.GetAttribute("MaxIcons") === 2);
 check("a fixed menu stays selected", fixedMenu.isSelected);
+check("modifyTheme last in an array adds no id to it", listed.size() === 2);
+check("modifyTheme applies", sizeWhileModified === 30);
+check("removeModification undoes by id", sizedLabel?.TextSize === 16);
 
 // Set after startup: TopbarPlus resets highlightIcon to false as it starts.
 Icon.highlightIcon = methods;

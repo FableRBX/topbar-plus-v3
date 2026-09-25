@@ -34,7 +34,8 @@
 	"author": "FableRBX",
 	"license": "MIT AND MPL-2.0",
 	"publishConfig": {
-		"access": "public"
+		"access": "public",
+		"tag": "latest"
 	},
 	"devDependencies": {
 		"prettier": "^3.9.6",

@@ -7,7 +7,12 @@ import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const test = join(root, "test");
-const run = (command, cwd = root) => execSync(command, { cwd, stdio: "inherit" });
+// `npm publish --dry-run` runs this through prepublishOnly and hands its
+// dry-run setting to every npm command below; a dry pack writes no tarball.
+const env = Object.fromEntries(
+	Object.entries(process.env).filter(([name]) => name.toLowerCase() !== "npm_config_dry_run"),
+);
+const run = (command, cwd = root) => execSync(command, { cwd, env, stdio: "inherit" });
 
 run(`node ${JSON.stringify(join(root, "scripts", "check-api.mjs"))}`);
 
@@ -15,7 +20,11 @@ const packDir = join(test, ".pack");
 rmSync(packDir, { recursive: true, force: true });
 mkdirSync(packDir);
 const [packed] = JSON.parse(
-	execSync(`npm pack --silent --json --pack-destination ${JSON.stringify(packDir)}`, { cwd: root, encoding: "utf8" }),
+	execSync(`npm pack --silent --json --pack-destination ${JSON.stringify(packDir)}`, {
+		cwd: root,
+		env,
+		encoding: "utf8",
+	}),
 );
 
 if (!existsSync(join(test, "node_modules"))) run("npm ci", test);

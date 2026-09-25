@@ -18,7 +18,12 @@ export function accepted(icon: Icon, numberSpinner: unknown) {
 		["Selection", "RotationSpeed", 2],
 		["IconImage", "ImageColor3", new Color3(1, 0, 0), "Viewing"],
 	];
-	icon.modifyTheme(one).modifyChildTheme(many);
+	icon.modifyTheme(one)[0].modifyChildTheme(many);
+
+	// modifyTheme's id undoes the change; the id can be chosen
+	const [themed, modificationId] = icon.modifyTheme(many);
+	themed.removeModification(modificationId);
+	icon.modifyTheme(one, "hover")[0].removeModification("hover");
 
 	// Font ids, and the optional weight and style
 	icon.setTextFont(12187370928).setTextFont("Creepster", Enum.FontWeight.Bold);

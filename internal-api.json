@@ -7,7 +7,6 @@
 		"refreshAppearance": "theme engine internals",
 		"refresh": "theme engine internals",
 		"setBehaviour": "theme engine internals",
-		"removeModification": "undocumented; takes the modification id modifyTheme returns second, which the typings drop so modifyTheme can chain",
 		"removeModificationWith": "undocumented theme internals",
 		"setTheme": "undocumented; modifyTheme and Icon.modifyBaseTheme are the documented way to theme",
 		"updateParent": "layout internals",

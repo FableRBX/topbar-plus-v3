@@ -72,6 +72,19 @@ end)
 local _binding = examples.destroying()
 local destroyed = _binding[1]
 local janitored = _binding[2]
+-- modifyTheme last in an array: the id must stay out of it. And its id undoes
+-- the change, back to the base theme's TextSize.
+local listParent = Icon.new():setLabel("List parent")
+local listed = { Icon.new():setLabel("A"), (Icon.new():setLabel("B"):modifyTheme({ "IconLabel", "TextSize", 30 })) }
+listParent:setDropdown(listed)
+local sized, sizeChange = Icon.new():setLabel("Sized"):modifyTheme({ "IconLabel", "TextSize", 30 })
+local sizedLabel = sized:getInstance("IconLabel")
+local _sizeWhileModified = sizedLabel
+if _sizeWhileModified ~= nil then
+	_sizeWhileModified = _sizeWhileModified.TextSize
+end
+local sizeWhileModified = _sizeWhileModified
+sized:removeModification(sizeChange)
 local toggles = 0
 toggler.toggled:Connect(function()
 	toggles += 1
@@ -132,6 +145,13 @@ if _result_3 ~= nil then
 end
 check("Menu MaxIcons lands as an attribute", _result_3 == 2)
 check("a fixed menu stays selected", fixedMenu.isSelected)
+check("modifyTheme last in an array adds no id to it", #listed == 2)
+check("modifyTheme applies", sizeWhileModified == 30)
+local _result_4 = sizedLabel
+if _result_4 ~= nil then
+	_result_4 = _result_4.TextSize
+end
+check("removeModification undoes by id", _result_4 == 16)
 -- Set after startup: TopbarPlus resets highlightIcon to false as it starts.
 Icon.highlightIcon = methods
 check("highlightIcon is static", Icon.highlightIcon == methods)

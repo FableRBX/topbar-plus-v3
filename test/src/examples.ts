@@ -53,7 +53,7 @@ export function captions() {
 export function dropdowns() {
 	return new Icon()
 		.setLabel("Example")
-		.modifyTheme(["Dropdown", "MaxIcons", 3])
+		.modifyTheme(["Dropdown", "MaxIcons", 3])[0]
 		.modifyChildTheme(["Widget", "MinimumWidth", 158])
 		.setDropdown([
 			new Icon().setLabel("Category 1"),
@@ -67,7 +67,7 @@ export function dropdowns() {
 export function menus() {
 	return new Icon()
 		.setLabel("Example")
-		.modifyTheme(["Menu", "MaxIcons", 2])
+		.modifyTheme(["Menu", "MaxIcons", 2])[0]
 		.setMenu([
 			new Icon().setLabel("Item 1"),
 			new Icon().setLabel("Item 2"),
@@ -78,7 +78,7 @@ export function menus() {
 
 // features.md: Fixed Menus. setFixedMenu returns nothing, so it ends the chain.
 export function fixedMenus() {
-	const icon = new Icon().modifyTheme(["Menu", "MaxIcons", 3]);
+	const [icon] = new Icon().modifyTheme(["Menu", "MaxIcons", 3]);
 	icon.setFixedMenu([
 		new Icon().setLabel("Item 1"),
 		new Icon().setLabel("Item 2"),

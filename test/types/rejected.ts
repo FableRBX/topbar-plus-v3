@@ -28,4 +28,8 @@ export function rejected(icon: Icon) {
 	icon.isSelected = true;
 	// @ts-expect-error getIcons is on Icon, not on an icon
 	icon.getIcons();
+	// @ts-expect-error modifyTheme returns the icon and an id; chain through [0]
+	icon.modifyTheme(["IconLabel", "TextSize", 16]).setLabel("Shop");
+	// @ts-expect-error last in an array, the id would land in the array too
+	icon.setDropdown([icon, icon.modifyTheme(["IconLabel", "TextSize", 16])]);
 }

@@ -40,11 +40,11 @@ local function captions()
 end
 -- features.md: Dropdowns
 local function dropdowns()
-	return Icon.new():setLabel("Example"):modifyTheme({ "Dropdown", "MaxIcons", 3 }):modifyChildTheme({ "Widget", "MinimumWidth", 158 }):setDropdown({ Icon.new():setLabel("Category 1"), Icon.new():setLabel("Category 2"), Icon.new():setLabel("Category 3"), Icon.new():setLabel("Category 4") })
+	return (Icon.new():setLabel("Example"):modifyTheme({ "Dropdown", "MaxIcons", 3 })):modifyChildTheme({ "Widget", "MinimumWidth", 158 }):setDropdown({ Icon.new():setLabel("Category 1"), Icon.new():setLabel("Category 2"), Icon.new():setLabel("Category 3"), Icon.new():setLabel("Category 4") })
 end
 -- features.md: Menus
 local function menus()
-	return Icon.new():setLabel("Example"):modifyTheme({ "Menu", "MaxIcons", 2 }):setMenu({ Icon.new():setLabel("Item 1"), Icon.new():setLabel("Item 2"), Icon.new():setLabel("Item 3"), Icon.new():setLabel("Item 4") })
+	return (Icon.new():setLabel("Example"):modifyTheme({ "Menu", "MaxIcons", 2 })):setMenu({ Icon.new():setLabel("Item 1"), Icon.new():setLabel("Item 2"), Icon.new():setLabel("Item 3"), Icon.new():setLabel("Item 4") })
 end
 -- features.md: Fixed Menus. setFixedMenu returns nothing, so it ends the chain.
 local function fixedMenus()

@@ -52,8 +52,12 @@ version and bump it when you want a new release.
   `"FrozenMenu"`.
 - `notified` passes the notice's id.
 - `highlightKey` and `highlightIcon` are set on `Icon`, not on an icon.
-- `modifyTheme` returns the icon so it can chain. The modification id it also
-  returns is left out of the typings.
+- `modifyTheme` returns two values: the icon and an id for the change. It is
+  typed as that pair, so chain through `[0]`
+  (`icon.modifyTheme(m)[0].setLabel("Shop")`) or destructure it
+  (`const [icon, id] = ...`) and pass the id to `removeModification`.
+  Typed as just the icon, a call at the end of an array, or one returned from a
+  function, would put the id into the array alongside the icons.
 
 ## Upstream behaviour worth knowing
 
@@ -67,6 +71,11 @@ version and bump it when you want a new release.
 - **Dropdowns overwrite their icons' theme.** An icon that joins a dropdown
   takes the dropdown's corner radius, sizes, text size and padding in place
   of any it set itself. After `leave()` its own values don't come back.
+- **`Icon.modifyBaseTheme` only changes what the default theme sets.** Any
+  other name and property is silently ignored.
+- **Calling `setDropdown` or `setMenu` again leaves some old icons behind.**
+  TopbarPlus skips some of the old icons it means to destroy, so destroy them
+  yourself. An icon whose last child leaves hides itself.
 - **Set `highlightIcon` a frame or more after TopbarPlus loads.** TopbarPlus
   sets it to `false` as it starts up.
 - **TopbarPlus prints one line in live games and warns when outdated.** It

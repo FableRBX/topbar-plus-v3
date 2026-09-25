@@ -16,7 +16,11 @@ local function accepted(icon, numberSpinner)
 	-- Modifications can be built ahead of time, in either shape
 	local one = { "Widget", "BorderSize", 2, "Selected" }
 	local many = { { "Selection", "RotationSpeed", 2 }, { "IconImage", "ImageColor3", Color3.new(1, 0, 0), "Viewing" } }
-	icon:modifyTheme(one):modifyChildTheme(many)
+	(icon:modifyTheme(one)):modifyChildTheme(many)
+	-- modifyTheme's id undoes the change; the id can be chosen
+	local themed, modificationId = icon:modifyTheme(many)
+	themed:removeModification(modificationId);
+	(icon:modifyTheme(one, "hover")):removeModification("hover")
 	-- Font ids, and the optional weight and style
 	icon:setTextFont(12187370928):setTextFont("Creepster", Enum.FontWeight.Bold)
 	-- A notice cleared by a Roblox event, and one by another icon's signal
