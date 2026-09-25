@@ -4,8 +4,10 @@
 package ships TopbarPlus's Luau exactly as upstream released it, plus typings
 written against that code.
 
+It isn't on npm. Install a release tag from GitHub:
+
 ```sh
-npm install @rbxts/topbar-plus-v3
+npm install "@rbxts/topbar-plus-v3@github:FableRBX/topbar-plus-v3#v3.4.0-ts.0"
 ```
 
 ```ts
@@ -26,9 +28,9 @@ typed. In the typings, `Icon.new()` is `new Icon()`, and a Luau method
 ## Versions
 
 The version is the TopbarPlus release plus a `-ts.N` suffix. `3.4.0-ts.0` is
-TopbarPlus v3.4.0, and a typings fix to it would be `3.4.0-ts.1`. A caret range
-doesn't carry a prerelease suffix from one release to the next, so pin an exact
-version and bump it when you want a new release.
+TopbarPlus v3.4.0, and a typings fix to it would be `3.4.0-ts.1`. Each release
+is a git tag of the same name with a `v` in front (`v3.4.0-ts.0`); depend on
+the tag and move to a newer one when you want it.
 
 ## How this differs from the other packages
 
@@ -110,4 +112,6 @@ tests) are MIT: see [LICENSE](LICENSE).
   that gets emitted.
 - `npm run test:place` builds `test/test.rbxl`. Play it in Studio: it runs
   every example and prints `[topbar-plus-v3] PASS`, or a line per failed check.
-- To publish: `npm publish`. It runs the lint and the tests first.
+- To release: set the version in `package.json`, commit, then tag it
+  `v<version>` and push the tag. `npm publish` also works (it runs the lint
+  and the tests first), but the package isn't on npm today.
