@@ -1,0 +1,11 @@
+{
+	"name": "topbar-plus-v3-test",
+	"private": true,
+	"description": "Compiles the TopbarPlus docs' examples against the packed package; the emitted Luau in out/ is committed",
+	"devDependencies": {
+		"@rbxts/compiler-types": "3.0.0-types.0",
+		"@rbxts/types": "^1.0.946",
+		"roblox-ts": "3.0.0",
+		"typescript": "^5.5.3"
+	}
+}

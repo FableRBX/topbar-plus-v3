@@ -1,0 +1,6 @@
+node_modules/
+*.tgz
+test/.pack/
+test/include/
+test/*.rbxl
+test/*.rbxl.lock

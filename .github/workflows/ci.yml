@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            test/package-lock.json
+      - run: npm ci
+      - run: npm ci
+        working-directory: test
+      - run: npm run lint
+      - run: npm test
+      # The Luau the examples compile to is committed; a change must be too.
+      - run: git diff --exit-code -- test/out

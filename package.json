@@ -1,0 +1,47 @@
+{
+	"name": "@rbxts/topbar-plus-v3",
+	"version": "3.4.0-ts.0",
+	"description": "TopbarPlus v3 for roblox-ts: the upstream Luau unmodified, with typings written against it",
+	"main": "out/init.lua",
+	"types": "out/index.d.ts",
+	"files": [
+		"out",
+		"LICENSE",
+		"LICENSE-TopbarPlus"
+	],
+	"scripts": {
+		"sync": "node scripts/sync.mjs",
+		"check-api": "node scripts/check-api.mjs",
+		"test": "node scripts/test.mjs",
+		"test:place": "rojo build test/default.project.json -o test/test.rbxl",
+		"format": "prettier --write .",
+		"lint": "prettier --check .",
+		"prepublishOnly": "npm run lint && npm test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/FableRBX/topbar-plus-v3.git"
+	},
+	"homepage": "https://github.com/FableRBX/topbar-plus-v3#readme",
+	"bugs": "https://github.com/FableRBX/topbar-plus-v3/issues",
+	"keywords": [
+		"roblox",
+		"roblox-ts",
+		"rbxts",
+		"topbarplus",
+		"topbar"
+	],
+	"author": "FableRBX",
+	"license": "MIT AND MPL-2.0",
+	"publishConfig": {
+		"access": "public"
+	},
+	"devDependencies": {
+		"prettier": "^3.9.6",
+		"typescript": "^5.5.3"
+	},
+	"topbarPlus": {
+		"tag": "v3.4.0",
+		"commit": "f44992bf02997d73cacfc07608c25131a7fd060b"
+	}
+}
