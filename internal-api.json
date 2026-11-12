@@ -53,6 +53,8 @@
 		"joinedFrame": "internal state",
 		"parentIconUID": "internal state",
 		"deselectWhenOtherIconSelected": "internal state; autoDeselect sets it",
+		"closeOnOutsideClick": "internal state; setCloseOnOutsideClick sets it",
+		"destroyOnRespawn": "internal state; setDestroyOnRespawn sets it",
 		"activeState": "internal state",
 		"alignment": "internal state; align sets it",
 		"originalAlignment": "internal state",

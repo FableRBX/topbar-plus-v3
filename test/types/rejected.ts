@@ -32,4 +32,8 @@ export function rejected(icon: Icon) {
 	icon.modifyTheme(["IconLabel", "TextSize", 16]).setLabel("Shop");
 	// @ts-expect-error last in an array, the id would land in the array too
 	icon.setDropdown([icon, icon.modifyTheme(["IconLabel", "TextSize", 16])]);
+	// @ts-expect-error addInstance puts it to the "Left" or "Right"
+	icon.addInstance(new Instance("Frame"), "Center");
+	// @ts-expect-error addInstance takes a GuiObject
+	icon.addInstance(new Instance("Folder"));
 }

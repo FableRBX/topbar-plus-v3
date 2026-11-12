@@ -7,7 +7,7 @@ written against that code.
 It isn't on npm. Install a release tag from GitHub:
 
 ```sh
-npm install "@rbxts/topbar-plus-v3@github:FableRBX/topbar-plus-v3#v3.4.0-ts.0"
+npm install "@rbxts/topbar-plus-v3@github:FableRBX/topbar-plus-v3#v3.5.0-ts.0"
 ```
 
 ```ts
@@ -21,15 +21,15 @@ new Icon()
 	.setCaption("Open Shop");
 ```
 
-Everything in [TopbarPlus's docs](https://1foreverhd.github.io/TopbarPlus/) is
+Everything in [TopbarPlus's docs](https://nanoblox.com/topbarplus/) is
 typed. In the typings, `Icon.new()` is `new Icon()`, and a Luau method
 `icon:setLabel(...)` is `icon.setLabel(...)`.
 
 ## Versions
 
-The version is the TopbarPlus release plus a `-ts.N` suffix. `3.4.0-ts.0` is
-TopbarPlus v3.4.0, and a typings fix to it would be `3.4.0-ts.1`. Each release
-is a git tag of the same name with a `v` in front (`v3.4.0-ts.0`); depend on
+The version is the TopbarPlus release plus a `-ts.N` suffix. `3.5.0-ts.0` is
+TopbarPlus v3.5.0, and a typings fix to it would be `3.5.0-ts.1`. Each release
+is a git tag of the same name with a `v` in front (`v3.5.0-ts.0`); depend on
 the tag and move to a newer one when you want it.
 
 ## How this differs from the other packages
@@ -51,7 +51,8 @@ the tag and move to a newer one when you want it.
 - `setTextFont` takes a family name, a family link, a font id or an
   `Enum.Font`. Passing a `Font` makes TopbarPlus error.
 - The overflow event source is `"OverflowStart"`. Selecting a fixed menu uses
-  `"FrozenMenu"`.
+  `"FrozenMenu"`. A click outside an open dropdown closes it with
+  `"OutsideClick"`.
 - `notified` passes the notice's id.
 - `highlightKey` and `highlightIcon` are set on `Icon`, not on an icon.
 - `modifyTheme` returns two values: the icon and an id for the change. It is
@@ -65,25 +66,32 @@ the tag and move to a newer one when you want it.
 
 - **Make icons after the viewport has its size.** An icon's widest possible
   width is fixed when it is made: the viewport's width plus 200. A client
-  starts with a 1x1 viewport. So icons made on the first frame cap at 201px,
-  and a `MinimumWidth` above that errors on every resize. Wait first:
+  starts with a 1x1 viewport. So icons made on the first frame cap their
+  contents at 201px. Wait first:
   ```ts
   while ((Workspace.CurrentCamera?.ViewportSize.X ?? 0) <= 1) task.wait();
   ```
 - **Dropdowns overwrite their icons' theme.** An icon that joins a dropdown
   takes the dropdown's corner radius, sizes, text size and padding in place
-  of any it set itself. After `leave()` its own values don't come back.
+  of any it set itself, and its image scale unless it set one other than 0.5.
+  After `leave()` its own values don't come back.
+- **Dropdowns close on a click or tap outside them.** Call
+  `setCloseOnOutsideClick(false)` on the icon to keep one open.
 - **`Icon.modifyBaseTheme` only changes what the default theme sets.** Any
-  other name and property is silently ignored.
+  other name and property is ignored. Studio warns only when the instance
+  name is unknown.
 - **Calling `setDropdown` or `setMenu` again leaves some old icons behind.**
   TopbarPlus skips some of the old icons it means to destroy, so destroy them
   yourself. An icon whose last child leaves hides itself.
 - **Set `highlightIcon` a frame or more after TopbarPlus loads.** TopbarPlus
   sets it to `false` as it starts up.
-- **TopbarPlus prints one line in live games and warns when outdated.** It
-  prints `Running TopbarPlus` in live games (never in Studio), and warns when a
-  newer TopbarPlus exists. Both come from its `Attribute` module, which this
-  package leaves unchanged.
+- **Players with Reduce Motion on see no movement tweens.** Captions still
+  fade.
+- **TopbarPlus prints in live games and in Studio.** In live games (never in
+  Studio) it prints `Running TopbarPlus`, and it warns when a newer
+  TopbarPlus exists. In Studio it asks for a donation unless the developer
+  has donated. All three come from its `Attribute` module, which this package
+  leaves unchanged.
 
 ## Credit and license
 
