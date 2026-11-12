@@ -223,6 +223,16 @@ export function methods(item: Frame, onCall: (greeting: string) => void) {
 		.autoDeselect(false)
 		.autoDeselect()
 		.oneClick(false)
+		.setCloseOnOutsideClick(false)
+		.setCloseOnOutsideClick()
+		.setDestroyOnRespawn(false)
+		.setDestroyOnRespawn()
+		.setNoticeLabel("!")
+		.setNoticeLabel(undefined)
+		.addInstance(badge("Methods badge"), "Left")
+		.addInstance(badge("Methods badge 2"))
+		.setImage(Content.fromUri("rbxassetid://6069276526"), "Viewing")
+		.setImage(SHOP_IMAGE, "Viewing")
 		.select()
 		.deselect()
 		.notify(dropdownParent.deselected)
@@ -236,6 +246,27 @@ export function methods(item: Frame, onCall: (greeting: string) => void) {
 		.setCornerRadius(new UDim(0, 8));
 	task.spawn(() => icon.debounce(0.1));
 	return icon;
+}
+
+// For addInstance: a fixed width, since a scale width would follow the icon's.
+function badge(name: string) {
+	const frame = new Instance("Frame");
+	frame.Name = name;
+	frame.Size = UDim2.fromOffset(12, 12);
+	return frame;
+}
+
+// api.md: setNoticeLabel shows text such as "!" in place of the count
+export function noticeLabels() {
+	return new Icon().setLabel("Notice label").setNoticeLabel("!").notify();
+}
+
+// api.md: addInstance, on each side
+export function addedInstances() {
+	const left = badge("Left badge");
+	const right = badge("Right badge");
+	const icon = new Icon().setLabel("Added").addInstance(left, "Left").addInstance(right, "Right");
+	return [icon, left, right] as const;
 }
 
 export function destroying() {

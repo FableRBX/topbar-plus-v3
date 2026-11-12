@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/topbar-plus-v3",
-	"version": "3.4.0-ts.0",
+	"version": "3.5.0-ts.0",
 	"description": "TopbarPlus v3 for roblox-ts: the upstream Luau unmodified, with typings written against it",
 	"main": "out/init.lua",
 	"types": "out/index.d.ts",
@@ -42,7 +42,7 @@
 		"typescript": "^5.5.3"
 	},
 	"topbarPlus": {
-		"tag": "v3.4.0",
-		"commit": "f44992bf02997d73cacfc07608c25131a7fd060b"
+		"tag": "v3.5.0",
+		"commit": "4e5169a8dd209ec650cc29d904b629174b08ac5b"
 	}
 }

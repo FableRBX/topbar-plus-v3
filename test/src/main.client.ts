@@ -22,8 +22,7 @@ examples.overflows();
 
 // An icon's widest possible width is fixed when it is made, at the viewport's
 // width plus 200. The viewport is 1x1 as a client starts, so icons made then
-// cap at 201px and a larger MinimumWidth (the theme example's 290) errors on
-// every resize. Wait for the real viewport first.
+// cap their contents at 201px. Wait for the real viewport first.
 const Workspace = game.GetService("Workspace");
 while ((Workspace.CurrentCamera?.ViewportSize.X ?? 0) <= 1) task.wait();
 
@@ -46,6 +45,10 @@ examples.events(toggler);
 let greeting: string | undefined;
 const methods = examples.methods(shop, (text) => (greeting = text));
 const [destroyed, janitored] = examples.destroying();
+const noticeLabelled = examples.noticeLabels();
+const [withInstances, leftAdded, rightAdded] = examples.addedInstances();
+const addedThenDestroyed = examples.addedInstances();
+addedThenDestroyed[0].destroy();
 
 // modifyTheme last in an array: the id must stay out of it. And its id undoes
 // the change, back to the base theme's TextSize.
@@ -82,6 +85,12 @@ check("unlock leaves locked false", methods.locked === false);
 check("toggled fires on select and deselect", toggles === 2);
 check("notify counts a notice", noticed.totalNotices === 1);
 check("clearNotices empties the count", methods.totalNotices === 0);
+check("setNoticeLabel shows its text", noticeLabelled.getInstance("NoticeLabel")?.Text === "!");
+check("setNoticeLabel keeps the count", noticeLabelled.totalNotices === 1);
+const contents = withInstances.getInstance("Contents");
+check("addInstance puts it in Contents", leftAdded.Parent === contents && rightAdded.Parent === contents);
+check("addInstance orders the sides", leftAdded.LayoutOrder < rightAdded.LayoutOrder);
+check("addInstance destroys it with the icon", addedThenDestroyed[1].Parent === undefined);
 check("highlightKey is static and survives startup", Icon.highlightKey === Enum.KeyCode.ButtonY);
 check("closeableOverflowMenus is static", Icon.closeableOverflowMenus === true);
 

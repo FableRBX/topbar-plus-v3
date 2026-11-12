@@ -11,10 +11,11 @@ export type IconAlignment = "Left" | "Center" | "Right";
 /**
  * What caused an icon to be selected or deselected, as passed to `selected`,
  * `deselected` and `toggled`. Undefined when `select()` or `deselect()` was
- * called without one.
+ * called without one. `"OutsideClick"` is a click or tap outside an open
+ * dropdown closing it.
  */
 export type IconEventSource =
-	"User" | "OneClick" | "AutoDeselect" | "HideParentFeature" | "OverflowStart" | "FrozenMenu";
+	"User" | "OneClick" | "AutoDeselect" | "HideParentFeature" | "OverflowStart" | "FrozenMenu" | "OutsideClick";
 
 /** A connection to one of TopbarPlus's signals. */
 export interface IconConnection {
@@ -104,7 +105,7 @@ type IconThemeValues<N extends keyof IconThemeTargets> = WritableInstancePropert
 /**
  * One appearance change: an instance (or collective) name, a property, its
  * value, and optionally the state it applies to (all states when left out).
- * See [themes](https://1foreverhd.github.io/TopbarPlus/features/#modify-theme).
+ * See [themes](https://nanoblox.com/topbarplus/features/#modify-theme).
  */
 export type IconModification = {
 	[N in keyof IconThemeTargets]: {
@@ -144,7 +145,7 @@ export interface Icon {
 	getInstance(instanceName: string): Instance | undefined;
 	/**
 	 * Changes the icon's appearance.
-	 * See [themes](https://1foreverhd.github.io/TopbarPlus/features/#modify-theme).
+	 * See [themes](https://nanoblox.com/topbarplus/features/#modify-theme).
 	 *
 	 * Returns two values, the icon and an id for the change, which
 	 * `removeModification` takes. Chain through `[0]`, or destructure. (Typed as
@@ -178,12 +179,15 @@ export interface Icon {
 	clearNotices(): this;
 	/** When true, the shade shown while the icon is pressed is not shown. */
 	disableOverlay(disabled: boolean): this;
-	/** An asset id, or a full content string such as "rbxassetid://123". */
-	setImage(imageId: string | number, iconState?: IconState): this;
+	/**
+	 * An asset id, a full content string such as "rbxassetid://123", or a
+	 * `Content` (an EditableImage's, for one).
+	 */
+	setImage(imageId: string | number | Content, iconState?: IconState): this;
 	setLabel(text: string, iconState?: IconState): this;
 	setOrder(order: number, iconState?: IconState): this;
 	setCornerRadius(radius: UDim, iconState?: IconState): this;
-	/** "Left" (the default), "Center" or "Right". See [alignments](https://1foreverhd.github.io/TopbarPlus/features/#alignments). */
+	/** "Left" (the default), "Center" or "Right". See [alignments](https://nanoblox.com/topbarplus/features/#alignments). */
 	align(alignment?: IconAlignment): this;
 	/** The icon's minimum width; a long label can make it wider. Defaults to 44. */
 	setWidth(minimumWidth: number, iconState?: IconState): this;
@@ -216,7 +220,7 @@ export interface Icon {
 	unbindEvent(eventName: keyof IconEvents): this;
 	/**
 	 * Toggles the icon when the key is pressed, and adds the key to its caption.
-	 * See [toggle keys](https://1foreverhd.github.io/TopbarPlus/features/#toggle-keys).
+	 * See [toggle keys](https://nanoblox.com/topbarplus/features/#toggle-keys).
 	 */
 	bindToggleKey(key: Enum.KeyCode): this;
 	unbindToggleKey(key: Enum.KeyCode): this;
@@ -236,13 +240,41 @@ export interface Icon {
 	autoDeselect(enabled?: boolean): this;
 	/** Makes the icon deselect as soon as it is selected, like a button. The argument defaults to true. */
 	oneClick(enabled?: boolean): this;
-	/** Shows text on hover. Undefined removes it. See [captions](https://1foreverhd.github.io/TopbarPlus/features/#captions). */
+	/**
+	 * Whether the icon's open dropdown closes, with `"OutsideClick"` as the
+	 * source, when the player clicks or taps outside the icon and its dropdown.
+	 * On by default; the argument defaults to true. A locked icon stays open.
+	 */
+	setCloseOnOutsideClick(enabled?: boolean): this;
+	/**
+	 * Whether an icon made by a script under a ScreenGui with `ResetOnSpawn` is
+	 * destroyed when the player respawns, since that script runs again. On by
+	 * default; the argument defaults to true. Turn it off when the code that
+	 * made the icon won't run again.
+	 */
+	setDestroyOnRespawn(enabled?: boolean): this;
+	/**
+	 * Shows this text (such as "!") in the notice instead of the number of
+	 * notices. The notice still shows only while there are notices. Undefined
+	 * shows the count again.
+	 */
+	setNoticeLabel(text?: string): this;
+	/**
+	 * Puts your own GuiObject inside the icon, to the "Left" or "Right" (the
+	 * default) of its image and label, and the icon resizes around it. Give it an
+	 * offset or automatic width: a scale width follows the icon's own width. It
+	 * is destroyed with the icon. TopbarPlus can theme it by name, but
+	 * `modifyTheme` here only takes TopbarPlus's own instance names, so set its
+	 * properties directly.
+	 */
+	addInstance(instance: GuiObject, side?: "Left" | "Right"): this;
+	/** Shows text on hover. Undefined removes it. See [captions](https://nanoblox.com/topbarplus/features/#captions). */
 	setCaption(text?: string): this;
 	/** Shows a key in the caption without binding it. */
 	setCaptionHint(key: Enum.KeyCode): this;
 	/**
 	 * Gives the icon a vertical dropdown of these icons.
-	 * See [dropdowns](https://1foreverhd.github.io/TopbarPlus/features/#dropdowns).
+	 * See [dropdowns](https://nanoblox.com/topbarplus/features/#dropdowns).
 	 *
 	 * Calling it again is meant to destroy the icons from the last call, but
 	 * TopbarPlus skips some of them, so destroy those yourself. An icon hides
@@ -252,7 +284,7 @@ export interface Icon {
 	joinDropdown(parentIcon: Icon): this;
 	/**
 	 * Gives the icon a horizontal menu of these icons.
-	 * See [menus](https://1foreverhd.github.io/TopbarPlus/features/#menus).
+	 * See [menus](https://nanoblox.com/topbarplus/features/#menus).
 	 *
 	 * Calling it again has the same problem as `setDropdown`: some of the old
 	 * icons survive.

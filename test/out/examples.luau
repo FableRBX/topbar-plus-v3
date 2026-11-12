@@ -136,6 +136,7 @@ local function properties(icon)
 	}
 end
 -- api.md: Methods, each called at least once
+local badge
 local function methods(item, onCall)
 	local dropdownParent = Icon.new():setLabel("Dropdown parent")
 	local menuParent = Icon.new():setLabel("Menu parent")
@@ -145,11 +146,29 @@ local function methods(item, onCall)
 		return onCall(`{greeting} from {icon.name}`)
 	end, "hello"):addToJanitor(function()
 		return print("cleaned up")
-	end):addToJanitor(Instance.new("Folder")):lock():unlock():autoDeselect(false):autoDeselect():oneClick(false):select():deselect():notify(dropdownParent.deselected):clearNotices():joinDropdown(dropdownParent):leave():joinMenu(menuParent):leave():setCornerRadius(UDim.new(0, 8))
+	end):addToJanitor(Instance.new("Folder")):lock():unlock():autoDeselect(false):autoDeselect():oneClick(false):setCloseOnOutsideClick(false):setCloseOnOutsideClick():setDestroyOnRespawn(false):setDestroyOnRespawn():setNoticeLabel("!"):setNoticeLabel(nil):addInstance(badge("Methods badge"), "Left"):addInstance(badge("Methods badge 2")):setImage(Content.fromUri("rbxassetid://6069276526"), "Viewing"):setImage(SHOP_IMAGE, "Viewing"):select():deselect():notify(dropdownParent.deselected):clearNotices():joinDropdown(dropdownParent):leave():joinMenu(menuParent):leave():setCornerRadius(UDim.new(0, 8))
 	task.spawn(function()
 		return icon:debounce(0.1)
 	end)
 	return icon
+end
+-- For addInstance: a fixed width, since a scale width would follow the icon's.
+function badge(name)
+	local frame = Instance.new("Frame")
+	frame.Name = name
+	frame.Size = UDim2.fromOffset(12, 12)
+	return frame
+end
+-- api.md: setNoticeLabel shows text such as "!" in place of the count
+local function noticeLabels()
+	return Icon.new():setLabel("Notice label"):setNoticeLabel("!"):notify()
+end
+-- api.md: addInstance, on each side
+local function addedInstances()
+	local left = badge("Left badge")
+	local right = badge("Right badge")
+	local icon = Icon.new():setLabel("Added"):addInstance(left, "Left"):addInstance(right, "Right")
+	return { icon, left, right }
 end
 local function destroying()
 	local destroyed = Icon.new():setLabel("Destroyed")
@@ -178,5 +197,7 @@ return {
 	events = events,
 	properties = properties,
 	methods = methods,
+	noticeLabels = noticeLabels,
+	addedInstances = addedInstances,
 	destroying = destroying,
 }

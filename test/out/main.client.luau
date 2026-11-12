@@ -31,8 +31,7 @@ examples.gamepad()
 examples.overflows()
 -- An icon's widest possible width is fixed when it is made, at the viewport's
 -- width plus 200. The viewport is 1x1 as a client starts, so icons made then
--- cap at 201px and a larger MinimumWidth (the theme example's 290) errors on
--- every resize. Wait for the real viewport first.
+-- cap their contents at 201px. Wait for the real viewport first.
 local Workspace = game:GetService("Workspace")
 while true do
 	local _result = Workspace.CurrentCamera
@@ -72,6 +71,13 @@ end)
 local _binding = examples.destroying()
 local destroyed = _binding[1]
 local janitored = _binding[2]
+local noticeLabelled = examples.noticeLabels()
+local _binding_1 = examples.addedInstances()
+local withInstances = _binding_1[1]
+local leftAdded = _binding_1[2]
+local rightAdded = _binding_1[3]
+local addedThenDestroyed = examples.addedInstances()
+addedThenDestroyed[1]:destroy()
 -- modifyTheme last in an array: the id must stay out of it. And its id undoes
 -- the change, back to the base theme's TextSize.
 local listParent = Icon.new():setLabel("List parent")
@@ -93,8 +99,8 @@ end)
 toggler:select()
 toggler:deselect()
 task.wait(1.5)
-local _binding_1 = examples.functions()
-local icons = _binding_1.icons
+local _binding_2 = examples.functions()
+local icons = _binding_2.icons
 local _uID = fresh.UID
 check("a new icon has a string UID", type(_uID) == "string")
 check("name is undefined until setName", freshProperties.name == nil)
@@ -114,44 +120,54 @@ check("unlock leaves locked false", methods.locked == false)
 check("toggled fires on select and deselect", toggles == 2)
 check("notify counts a notice", noticed.totalNotices == 1)
 check("clearNotices empties the count", methods.totalNotices == 0)
+local _result = noticeLabelled:getInstance("NoticeLabel")
+if _result ~= nil then
+	_result = _result.Text
+end
+check("setNoticeLabel shows its text", _result == "!")
+check("setNoticeLabel keeps the count", noticeLabelled.totalNotices == 1)
+local contents = withInstances:getInstance("Contents")
+check("addInstance puts it in Contents", leftAdded.Parent == contents and rightAdded.Parent == contents)
+check("addInstance orders the sides", leftAdded.LayoutOrder < rightAdded.LayoutOrder)
+check("addInstance destroys it with the icon", addedThenDestroyed[2].Parent == nil)
 check("highlightKey is static and survives startup", Icon.highlightKey == Enum.KeyCode.ButtonY)
 check("closeableOverflowMenus is static", Icon.closeableOverflowMenus == true)
 local label = methods:getInstance("IconLabel")
 check("getInstance returns the named TextLabel", label ~= nil and label:IsA("TextLabel"))
-local _result = label
-if _result ~= nil then
-	_result = _result.TextColor3:ToHex()
+local _result_1 = label
+if _result_1 ~= nil then
+	_result_1 = _result_1.TextColor3:ToHex()
 end
-check("setTextColor colours the label", _result == "ffc800")
+check("setTextColor colours the label", _result_1 == "ffc800")
 check("getInstance misses as undefined", methods:getInstance("No such instance") == nil)
 local _corner = methods:getInstance("IconButton")
 if _corner ~= nil then
 	_corner = _corner:FindFirstChildWhichIsA("UICorner")
 end
 local corner = _corner
-local _result_1 = corner
-if _result_1 ~= nil then
-	_result_1 = _result_1.CornerRadius
-end
-check("setCornerRadius takes a UDim", _result_1 == UDim.new(0, 8))
-local _result_2 = dropdown:getInstance("Dropdown")
+local _result_2 = corner
 if _result_2 ~= nil then
-	_result_2 = _result_2:GetAttribute("MaxIcons")
+	_result_2 = _result_2.CornerRadius
 end
-check("Dropdown MaxIcons lands as an attribute", _result_2 == 3)
-local _result_3 = menu:getInstance("Menu")
+check("setCornerRadius takes a UDim", _result_2 == UDim.new(0, 8))
+local _result_3 = dropdown:getInstance("Dropdown")
 if _result_3 ~= nil then
 	_result_3 = _result_3:GetAttribute("MaxIcons")
 end
-check("Menu MaxIcons lands as an attribute", _result_3 == 2)
+check("Dropdown MaxIcons lands as an attribute", _result_3 == 3)
+local _result_4 = menu:getInstance("Menu")
+if _result_4 ~= nil then
+	_result_4 = _result_4:GetAttribute("MaxIcons")
+end
+check("Menu MaxIcons lands as an attribute", _result_4 == 2)
 check("a fixed menu stays selected", fixedMenu.isSelected)
 check("modifyTheme last in an array adds no id to it", #listed == 2)
 check("modifyTheme applies", sizeWhileModified == 30)
-local _result_4 = sizedLabel
-if _result_4 ~= nil then
-	_result_4 = _result_4.TextSize
+local _result_5 = sizedLabel
+if _result_5 ~= nil then
+	_result_5 = _result_5.TextSize
 end
-check("removeModification undoes by id", _result_4 == 16)
+check("removeModification undoes by id", _result_5 == 16)
 -- Set after startup: TopbarPlus resets highlightIcon to false as it starts.
 Icon.highlightIcon = methods
 check("highlightIcon is static", Icon.highlightIcon == methods)
